@@ -36,7 +36,7 @@ const taskManager = createSlice({
       state.completedTasks.unshift(action.payload);
       localStorage.setItem("Completed", JSON.stringify(state.completedTasks));
       const filteredInprocessTasks = state.inProcessTasks.filter((data) => {
-        return action.payload.title !== data.title;
+        return action.payload.id !== data.id;
       });
       state.inProcessTasks = filteredInprocessTasks;
       localStorage.setItem("InProcess", JSON.stringify(state.inProcessTasks));
@@ -97,6 +97,15 @@ const taskManager = createSlice({
       if (dataIndex !== -1) state.inProcessTasks[dataIndex] = action.payload;
       localStorage.setItem("InProcess", JSON.stringify(state.inProcessTasks));
     },
+    undoTask: (state, action) => {
+      state.inProcessTasks.unshift(action.payload);
+      localStorage.setItem("InProcess", JSON.stringify(state.inProcessTasks));
+      const filterCompletedTask = state.completedTasks.filter((data) => {
+        return data.id !== action.payload.id;
+      });
+      state.completedTasks = filterCompletedTask;
+      localStorage.setItem("Completed", JSON.stringify(state.completedTasks));
+    },
   },
 });
 
@@ -116,4 +125,5 @@ export const {
   setTaskModelData,
   resetTastModelData,
   editInProcessTask,
+  undoTask,
 } = taskManager.actions;

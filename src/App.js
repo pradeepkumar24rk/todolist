@@ -37,7 +37,9 @@ export default App;
 const Container = styled.div`
   padding: 10px;
 `;
-const Header = styled.div``;
+const Header = styled.div`
+text-align: center;
+`;
 const Body = styled.div`
   display: flex;
   gap: 10px;

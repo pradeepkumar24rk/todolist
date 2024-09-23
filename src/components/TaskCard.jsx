@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { MdOutlineDelete } from "react-icons/md";
 import { MdDone } from "react-icons/md";
 import { AiFillEdit } from "react-icons/ai";
+import { CiRedo } from "react-icons/ci";
 import { useDispatch } from "react-redux";
 import {
   deleteCompletedTask,
@@ -12,6 +13,7 @@ import {
   setCompletedTasks,
   setCreationDrawerType,
   setTaskModelData,
+  undoTask,
 } from "../Redux/Slices/taskManagerSlice";
 
 const TaskCard = ({ type, data }) => {
@@ -24,13 +26,13 @@ const TaskCard = ({ type, data }) => {
   const closeDrawer = () => {
     setDrawer(false);
   };
-  
+
   const openEditingDrawer = () => {
     dispatch(openCreationDrawer());
     dispatch(setCreationDrawerType("EDIT"));
-    dispatch(setTaskModelData(data))
+    dispatch(setTaskModelData(data));
   };
-  
+
   const deleteTask = () => {
     if (type === "InProcess Task") dispatch(deleteInProcessTask(data));
     else dispatch(deleteCompletedTask(data));
@@ -40,13 +42,17 @@ const TaskCard = ({ type, data }) => {
     dispatch(setCompletedTasks(data));
   };
   
+  const undo = () =>{
+    dispatch(undoTask(data))
+  }
+
   return (
     <Container>
       <Drawer
         opened={drawer}
         onClose={closeDrawer}
         position='right'
-        title="Task"
+        title='Task'
       >
         <DisplayContent>
           <h3>{data.title}</h3>
@@ -64,14 +70,22 @@ const TaskCard = ({ type, data }) => {
         <p>{data.description}</p>
       </Content>
       <ControlButtons>
-        {type === "InProcess Task" && (<>
-          <Button onClick={openEditingDrawer} >
-            <AiFillEdit size={20}/>
-          </Button>
-          <Button onClick={handleDone}>
-            <MdDone size={20} />
-          </Button>
-        </>
+        {type === "InProcess Task" && (
+          <>
+            <Button onClick={openEditingDrawer}>
+              <AiFillEdit size={20} />
+            </Button>
+            <Button onClick={handleDone}>
+              <MdDone size={20} />
+            </Button>
+          </>
+        )}
+        {type === "Completed Task" && (
+          <>
+            <Button onClick={undo}>
+              <CiRedo size={20} />
+            </Button>
+          </>
         )}
         <Button
           variant='filled'
